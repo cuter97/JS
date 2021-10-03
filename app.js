@@ -13,7 +13,6 @@ if ((num1 >= 0 && num1 <= 10)) {
         }
         else
             console.log("por lo que la suma es menor a 35");
-
     }
     else
         alert("el segundo numero ingresado no esta entre 20 y 30");
