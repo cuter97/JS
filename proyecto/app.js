@@ -14,13 +14,18 @@ class birra{
         let aux; 
 
         if (aux = cervezas.find(cerveza => cerveza.id == num)) {
-             this.agregar(aux.producto, cant);
+
+            let juntos = aux.producto + "  cantidad: " + cant;
+
+             this.agregar(juntos, this.array);
              this.imprimir(this.array);
 
              aux = aux.precio*cant;
+             this.agregar(aux, this.precios);
 
-             let sumita = this.suma(aux);
-             console.log(`total: ${sumita}`);
+             let sumita = this.suma(this.precios);
+             console.log(`total: ${sumita}$`);
+             
         }
         else{
             console.log("NO EXISTE ESTA CERVEZA");
@@ -28,57 +33,72 @@ class birra{
     }
 
     suma(para){
-        this.precios.push(para);
+        // this.precios.push(para);
 
         let resultado = 0;
-        let length = this.precios.length;
+        let length = para.length;
 
         for (let i = 0; i < length; i++) 
-            resultado += this.precios[i];
+            resultado += para[i];
         
         return resultado;
     }
 
-    agregar(elemento, cant){
-        this.array.push(elemento,cant);
+    agregar(elemento,ermao){
+        ermao.push(elemento);
     }
 
     imprimir(vec){
-        vec.forEach((element) => {
-            console.log(element.toString());    
+        vec.forEach((element,index) => {
+            console.log(`${element.toString()} --> articulo: ${index+1}`);
+            // console.log(element.toString());    
         });
+    }
+
+    sacar(pos){
+        this.array.splice(pos-1, 1);
+        this.precios.splice(pos-1, 1);
+
+        let sumita2 = this.suma(this.precios); 
+
+        this.imprimir(this.array);
+        console.log(`total: ${sumita2}$`);
     }
 
 }
 
-/*MAIN*/
 
+/*MAIN*/
 let xd = new birra();
 
+alert("VER DETALLES EN CONSOLA");
 let numero = Number(prompt("ingrese numero de la cerveza a comprar"));
 let cantidad = Number(prompt("ingrese la cantidad"));
 
 xd.buscar(numero, cantidad);
 console.log(`\n`);
 
-let opcion;
+let opcion,pos;
 do {
-    opcion = parseInt(prompt("opciones \n (1)->comprar otra birra \n (2)->terminar de comprar"));
+    opcion = parseInt(prompt("opciones \n (1)->comprar otra birra \n (2)->eliminar producto del carrito \n (3)->terminar de comprar"));
 
     switch (opcion) {
         case 1:
              numero = Number(prompt("ingrese numero de la cerveza a comprar"));
-             cantidad = Number(prompt("ingrese la cantidad")); 
+             cantidad = Number(prompt("ingrese la cantidad de botellas que desea")); 
              xd.buscar(numero, cantidad); 
 
              console.log(`\n`);
             break;
-    
+        
+        case 2:
+            pos = Number(prompt("ingresar número del artículo a eliminar"));
+            xd.sacar(pos);
+            console.log(`\n`);
+            
         default:
             break;
     }
 
 
-} while (opcion > 0 && opcion < 2);
-
-
+} while (opcion > 0 && opcion < 3);
