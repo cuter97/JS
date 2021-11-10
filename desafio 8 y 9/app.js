@@ -116,7 +116,7 @@ function crearProductos(){
             total = total + miItem[0].precio;
         });
         // Renderizamos el precio en el HTML
-        DOMtotal.textContent = total;
+        DOMtotal.textContent = total + '$';
     }
 
 
