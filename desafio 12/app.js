@@ -102,16 +102,14 @@ const pintarFooter = () => {
     $('#footer-carrito').append(fragment)
 
     // boton de vaciar carrito
-    const boton = $('#vaciar-carrito');
-    boton.on('click', () => {
+    $('#vaciar-carrito').on('click', () => {
         carrito = {}
         pintarCarrito();
-        numCar.empty();
+        $('#num-carrito').empty();
         localStorage.clear();
     });
 
-    const numCar = document.querySelector('#num-carrito');
-    numCar.textContent = nCantidad; 
+    $('#num-carrito').text(nCantidad); 
 
 }
 
