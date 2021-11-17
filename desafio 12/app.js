@@ -1,21 +1,4 @@
-
-// para despues usar una api xd
-// document.addEventListener("DOMContentLoaded", () =>{
-//     fetchData();
-// });
-
-// const fetchData = async () => {
-//     try {
-//         const res = await fetch('https://my-json-server.typicode.com/cuter97/API/productos');
-//         const data = await res.json();
-//         pintarProductos(data);
-//         //console.log(data);
-//     } catch (error) {
-//         console.log(error);
-//     }
-// }
-
-const productos = [
+ const productos = [
     {id: 1, producto: "IPA 1L", precio: 120, imagen: 'https://picsum.photos/id/110/200'},
     {id: 2, producto: "Amber Lager 1L", precio: 100, imagen: 'https://picsum.photos/id/111/200'},
     {id: 3, producto: "Red Ipa 1L", precio: 140, imagen: 'https://picsum.photos/id/112/200'},
@@ -25,29 +8,27 @@ const productos = [
     {id: 7, producto: "Schneider 1L", precio: 115, imagen: 'https://picsum.photos/id/116/200'},
     {id: 8, producto: "Doble IPA", precio: 300, imagen: 'https://picsum.photos/id/128/200'},
     {id: 9, producto: "Ander 1L", precio: 190, imagen: 'https://picsum.photos/id/120/200'} 
-    ];
-
-const contenedorProductos = document.querySelector('#contenedor-productos');
-
-const pintarProductos = () => {
-     const template = document.querySelector('#template-productos').content;
-     const fragment = document.createDocumentFragment();
-     productos.forEach(item => {
-         template.querySelector('img').setAttribute('src',item.imagen);
-         template.querySelector('h5').textContent = item.producto;
-         template.querySelector('p').textContent = 'Precio: $' + item.precio;
-
-        //  colocamos el id correspondiente de cada producto en el boton
-        template.querySelector('button').dataset.id = item.id;
-
-         const clone = template.cloneNode(true);
-         fragment.appendChild(clone);
-     });
-     contenedorProductos.appendChild(fragment);
-}
-
+];
 
 let carrito = {}
+
+// uso de jquery
+const pintarProductos = () => {
+    const template = document.querySelector('#template-productos').content;
+    const fragment = document.createDocumentFragment();
+    productos.forEach(item => {
+        template.querySelector('img').setAttribute('src',item.imagen);
+        template.querySelector('h5').textContent = item.producto;
+        template.querySelector('p').textContent = 'Precio: $' + item.precio;
+
+       //  colocamos el id correspondiente de cada producto en el boton
+       template.querySelector('button').dataset.id = item.id;
+
+        const clone = template.cloneNode(true);
+        fragment.append(clone);
+    });
+    $('#contenedor-productos').append(fragment);
+}
 
 const detectarBotones = () => {
     // buscamos dentro de .card los botones y los almacenamos 
@@ -66,10 +47,9 @@ const detectarBotones = () => {
     });
 }
 
-const items = document.querySelector('#items');
 
 const pintarCarrito = () => {
-    items.innerHTML = '';
+    $('#items').empty();
     const template = document.querySelector('#template-carrito').content;
     const fragment = document.createDocumentFragment();
 
@@ -89,7 +69,7 @@ const pintarCarrito = () => {
         const clone = template.cloneNode(true);
         fragment.appendChild(clone);
     });
-    items.appendChild(fragment);
+    $('#items').append(fragment);
 
     botonX();
     pintarFooter();
@@ -99,13 +79,11 @@ const pintarCarrito = () => {
 }
 
 
-const footer = document.querySelector('#footer-carrito'); 
-
 const pintarFooter = () => {
-    footer.innerHTML = '';
+    $('#footer-carrito').empty();
     
      if (Object.keys(carrito).length === 0) {
-         footer.innerHTML = `<th scope="row" colspan="5">Carrito vacío</th>`
+        $('#footer-carrito').append( `<th scope="row" colspan="5">Carrito vacío</th>`)
          return
      }
 
@@ -121,19 +99,19 @@ const pintarFooter = () => {
     const clone = template.cloneNode(true)
     fragment.appendChild(clone)
 
-    footer.appendChild(fragment)
+    $('#footer-carrito').append(fragment)
 
     // boton de vaciar carrito
-    const boton = document.querySelector('#vaciar-carrito');
-    boton.addEventListener('click', () => {
+    const boton = $('#vaciar-carrito');
+    boton.on('click', () => {
         carrito = {}
         pintarCarrito();
-        numCar.textContent = '';
+        numCar.empty();
         localStorage.clear();
     });
 
     const numCar = document.querySelector('#num-carrito');
-    numCar.textContent = nCantidad;  
+    numCar.textContent = nCantidad; 
 
 }
 
@@ -189,19 +167,20 @@ const cargarLocalStorage = () => {
         carrito = JSON.parse(localStorage.getItem('carrito'));
     }
 }
-//main
+
+/*MAIN */
 cargarLocalStorage();
 pintarProductos();
 detectarBotones();
 pintarCarrito();
 pintarFooter();
 
-document.querySelector("#pills-home-tab").addEventListener('click', () => {
+$("#pills-home-tab").on('click', () => {
     document.querySelector('#pills-home').style.display = "block";
     document.querySelector('#pills-tabContent').style.display = "none";
 });
 
-document.querySelector("#pills-profile-tab").addEventListener('click', () => {
+$("#pills-profile-tab").on('click', () => {
     document.querySelector('#pills-home').style.display = "none";
     document.querySelector('#pills-tabContent').style.display = "block";
 });
