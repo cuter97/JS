@@ -1,6 +1,5 @@
 const animacion1 = $('.animation1');
 const animacion2 = $('.animation2');
-const tarjeta = $('.card');
 
 animacion2.css({'display': 'none'});
 
@@ -21,7 +20,7 @@ $( () => {
     
 });                  
 
-let elementsArray = document.querySelectorAll(".card");
+let elementsArray = document.querySelectorAll(".efecto-cartas");
 
 window.addEventListener('scroll', fadeIn ); 
 function fadeIn() {

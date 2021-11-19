@@ -52,7 +52,7 @@ body{
     }
 
 }
-.card {
+.efecto-cartas {
     transform: translateY(200px);
     transition-delay: 0.5s;
     transition: 1s;
@@ -62,3 +62,4 @@ body{
     opacity: 1;
     transform: translateY(0px);
 }
+

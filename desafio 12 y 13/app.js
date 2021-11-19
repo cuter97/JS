@@ -1,42 +1,57 @@
- const productos = [
-    {id: 1, producto: "IPA 1L", precio: 120, imagen: 'https://picsum.photos/id/110/200'},
-    {id: 2, producto: "Amber Lager 1L", precio: 100, imagen: 'https://picsum.photos/id/111/200'},
-    {id: 3, producto: "Red Ipa 1L", precio: 140, imagen: 'https://picsum.photos/id/112/200'},
-    {id: 4, producto: "Pilsen 1L", precio: 90, imagen: 'https://picsum.photos/id/113/200'},
-    {id: 5, producto: "Quilmes 1L", precio: 110, imagen: 'https://picsum.photos/id/114/200'},
-    {id: 6, producto: "Palermo 1L", precio: 20, imagen: 'https://picsum.photos/id/115/200'},
-    {id: 7, producto: "Schneider 1L", precio: 115, imagen: 'https://picsum.photos/id/116/200'},
-    {id: 8, producto: "Doble IPA", precio: 300, imagen: 'https://picsum.photos/id/128/200'},
-    {id: 9, producto: "Ander 1L", precio: 190, imagen: 'https://picsum.photos/id/120/200'} 
-];
+document.addEventListener("DOMContentLoaded", () =>{
+    fetchData();
+    if (localStorage.getItem('carrito')) {
+        carrito = JSON.parse(localStorage.getItem('carrito'));
+        pintarCarrito();
+    }
+});
 
-let carrito = {}
+const fetchData = async () => {
+    try {
+        const res = await fetch('https://my-json-server.typicode.com/cuter97/API/productos');
+        const data = await res.json();
+        pintarProductos(data);
+        detectarBotones(data);
+        //console.log(data);
+    } catch (error) {
+        console.log(error);
+    }
+}
 
-// uso de jquery
-const pintarProductos = () => {
+const contenedorProductos = document.querySelector('#contenedor-productos');
+
+
+ // uso de jquery
+const pintarProductos = (data) => {
     const template = document.querySelector('#template-productos').content;
     const fragment = document.createDocumentFragment();
-    productos.forEach(item => {
+    data.forEach(item => {
         template.querySelector('img').setAttribute('src',item.imagen);
         template.querySelector('h5').textContent = item.producto;
-        template.querySelector('p').textContent = 'Precio: $' + item.precio;
-
-       //  colocamos el id correspondiente de cada producto en el boton
-       template.querySelector('button').dataset.id = item.id;
-
+        template.querySelector('.info-producto').textContent = item.info;
+        template.querySelector('.card-text').textContent = 'Precio: $' + item.precio;
+        
+        //  colocamos el id correspondiente de cada producto en el boton
+        template.querySelector('.boton-comprar').dataset.id = item.id;
+        template.querySelector('.boton-info').setAttribute('data-bs-target', `#collapse${item.id}`);
+        template.querySelector('.boton-info').setAttribute('aria-controls', `collapse${item.id}`);
+        template.querySelector('.info-producto').setAttribute('id', `collapse${item.id}`);
+        
         const clone = template.cloneNode(true);
         fragment.append(clone);
     });
-    $('#contenedor-productos').append(fragment);
+    contenedorProductos.appendChild(fragment);
 }
+    
+let carrito = {}
 
-const detectarBotones = () => {
+const detectarBotones = (data) => {
     // buscamos dentro de .card los botones y los almacenamos 
-    const botones = document.querySelectorAll('.card button');
+    const botones = document.querySelectorAll('.card .boton-comprar');
 
     botones.forEach(btn =>{
         btn.addEventListener('click', () => {
-            const prod = productos.find(item => item.id === parseInt(btn.dataset.id));
+            const prod = data.find(item => item.id === parseInt(btn.dataset.id));
             prod.cantidad = 1;
             if (carrito.hasOwnProperty(prod.id)) {
                 prod.cantidad = carrito[prod.id].cantidad + 1 ;
@@ -159,20 +174,6 @@ const botonX = () => {
     });
 }
 
-const cargarLocalStorage = () => {
-    // si existe un carrito cargado lo imprimimos
-    if (localStorage.getItem('carrito')) {
-        carrito = JSON.parse(localStorage.getItem('carrito'));
-    }
-}
-
-/*MAIN */
-cargarLocalStorage();
-pintarProductos();
-detectarBotones();
-pintarCarrito();
-pintarFooter();
-
 $("#pills-home-tab").on('click', () => {
     document.querySelector('#pills-home').style.display = "block";
     document.querySelector('#pills-tabContent').style.display = "none";
@@ -182,3 +183,4 @@ $("#pills-profile-tab").on('click', () => {
     document.querySelector('#pills-home').style.display = "none";
     document.querySelector('#pills-tabContent').style.display = "block";
 });
+
